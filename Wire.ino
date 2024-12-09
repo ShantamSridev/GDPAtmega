@@ -6,6 +6,11 @@
 #define TYPE 3 //WIRE
 #define POLARISATION 0
 
+#define ADD_TYPE 0
+#define ADD_NIEGHBOURS 4
+#define ADD_POS_NEIGHBOUR 8
+#define ADD_POLARISATION 12
+#define ADD_LIVE_STATE 16
 
 #define RED1 PD3
 #define BLUE1 PD2
@@ -32,25 +37,27 @@ int currentLed = 0;               // Tracks the currently active LED
 
 void setup() {
     // Initialize simulated memory with some values
-    for (uint8_t i = 0; i < 128; i++) {
-        memory[i] = i;
-    }
+    // for (uint8_t i = 0; i < 128; i++) {
+    //     memory[i] = i;
+    // }
+
+    Serial.begin(9600);
     Wire.begin(SLAVE_ADDRESS);
     Wire.onReceive(receiveEvent);
     Wire.onRequest(requestEvent);
-    Serial.begin(9600);
 
     led_setup();
+    
+    memory[ADD_TYPE] = TYPE;
+    memory[ADD_POLARISATION] = 0;
+
 }
 
 void loop() {
-    // No continuous work needed; all actions are event-driven
-    // red_on();
-    // delay(2000);
-    // red_off();
-    // delay(2000);
-    led_cycle(-1);
-  
+
+    led_cycle(1);
+    red_on();
+
 }
 
 
@@ -90,11 +97,6 @@ void requestEvent() {
 
 
 void led_setup() {
-  // // Initialize the LED pins as outputs and turn them off
-  // for (int i = 0; i < numLeds; i++) {
-  //   pinMode(ledPins[i], OUTPUT);
-  //   digitalWrite(ledPins[i], HIGH); // Turn off the LED (active low)
-  // }
 
   DDRD |= (1 << RED1);
   DDRD |= (1 << BLUE1);
@@ -115,13 +117,6 @@ void led_setup() {
   PORTD |= (1 << BLUE5);
   PORTB |= (1 << BLUE6);
   PORTB |= (1 << BLUE7);
-
-  // // Turn on all LEDs
-  // for (int i = 0; i < numLeds; i++) {
-  //   digitalWrite(ledPins[i], LOW); // Turn on the LED (active low)
-  // }
-
-  
 }
 
 void all_leds_on(){
