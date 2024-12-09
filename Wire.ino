@@ -3,8 +3,15 @@
 #define SLAVE_ADDRESS 0x09
 #define READLENGTH 4
 #define RECEIVELENGTH 2
+#define TYPE 3 //WIRE
+#define POLARISATION 0
+
+
+
 uint8_t memory[128]; // Simulate internal registers/memory
 uint8_t currentInternalAddress = 0;
+
+
 
 void setup() {
     // Initialize simulated memory with some values
@@ -20,6 +27,8 @@ void setup() {
 void loop() {
     // No continuous work needed; all actions are event-driven
 }
+
+
 
 // Handle receiving data from the master
 void receiveEvent(int bytes) {
